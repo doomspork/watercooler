@@ -10,15 +10,16 @@
 </div>
 
 <div class="row login">
-  <%= form_for @conn, auth_path(@conn, :create), [as: :login], fn f -> %>
-  <div class="col-sm-3 col-sm-offset-4">
-    <div class="input-group">
-      <span class="input-group-addon">@</span>
-      <%= text_input f, :username, class: "form-control", placeholder: "username" %>
-    </div>
+  <div class="col-sm-3 col-sm-offset-3">
+    <a class="btn btn-primary btn-lg pull-right" href="/auth/github">
+      <i class="fa fa-github"></i>
+      Sign in with GitHub
+    </a>
   </div>
-  <div class="col-sm-2">
-    <%= submit "Sign in", class: "btn btn-primary pull-left" %>
+  <div class="col-sm-3">
+    <a class="btn btn-primary btn-lg" href="/auth/facebook">
+      <i class="fa fa-facebook"></i>
+      Sign in with Facebook
+    </a>
   </div>
-  <% end %>
 </div>

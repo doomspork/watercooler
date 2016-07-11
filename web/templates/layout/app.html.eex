@@ -11,6 +11,7 @@
     <% end %>
     <title>Watercooler</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
