@@ -22,6 +22,27 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :guardian, Guardian,
+  issuer: "Watercooler",
+  ttl: {30, :days},
+  secret_key: "u8OgtM1kGkhqCwuhmap8utR8HWjthnyZ7Q7cW5KLtuuAhqqtViNdghTM9CBijr7d",
+  serializer: Watercooler.GuardianSerializer
+
+config :ueberauth, Ueberauth,
+  providers: [
+    facebook: {Ueberauth.Strategy.Facebook, []},
+    github: {Ueberauth.Strategy.Github, []}
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
+  client_id: System.get_env("FACEBOOK_APP_ID"),
+  client_secret: System.get_env("FACEBOOK_APP_SECRET"),
+  redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI")
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: System.get_env("GITHUB_CLIENT_ID"),
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
