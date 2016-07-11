@@ -17,6 +17,10 @@ defmodule Watercooler.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/lobby", LobbyController, :index
+    post "/login", AuthController, :create
+    get "/logout", AuthController, :delete
+    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.
