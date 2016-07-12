@@ -1,11 +1,9 @@
 defmodule Watercooler.LobbyController do
   use Watercooler.Web, :controller
 
+  plug Guardian.Plug.EnsureAuthenticated, [handler: Watercooler.AuthController]
+
   def index(conn, _params) do
-    if current_user(conn) do
-      render(conn, "index.html")
-    else
-      redirect(conn, to: "/")
-    end
+    render(conn, "index.html")
   end
 end
