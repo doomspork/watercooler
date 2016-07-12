@@ -25,6 +25,7 @@ defmodule Watercooler.Router do
     get "/lobby", LobbyController, :index
     get "/signup", UserController, :new
     post "/signup", UserController, :create
+    get "/logout", AuthController, :delete
   end
 
   scope "/auth", Watercooler do
@@ -33,6 +34,5 @@ defmodule Watercooler.Router do
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
     post "/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
   end
 end
