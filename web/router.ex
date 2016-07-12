@@ -9,22 +9,30 @@ defmodule Watercooler.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :browser_session do
+    plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.LoadResource
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   scope "/", Watercooler do
-    pipe_through :browser # Use the default browser stack
+    pipe_through [:browser, :browser_session]
 
     get "/", PageController, :index
     get "/lobby", LobbyController, :index
-    post "/login", AuthController, :create
-    get "/logout", AuthController, :delete
-    delete "/logout", AuthController, :delete
+    get "/signup", UserController, :new
+    post "/signup", UserController, :create
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Watercooler do
-  #   pipe_through :api
-  # end
+  scope "/auth", Watercooler do
+    pipe_through [:browser]
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
 end
