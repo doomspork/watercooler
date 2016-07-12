@@ -1,42 +1,39 @@
 defmodule Watercooler.RoomChannel do
   use Watercooler.Web, :channel
 
-  def join("room:lobby", msg, socket) do
-    if authorized?(msg) do
-      socket = assign(socket, :user, msg["user"])
-      send(self, {:after_join, msg})
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
+  def join("room:lobby", %{"guardian_token" => token}, socket) do
+    case Guardian.Phoenix.Socket.sign_in(socket, token) do
+      {:ok, authed_socket, _guardian_params} ->
+        send(self, :after_join)
+        {:ok, authed_socket}
+      {:error, _reason} ->
+        {:error, %{reason: "unauthorized"}}
     end
   end
 
-  def join("rooms:" <> _unknown, _msg, _socket) do
+  def join(_unknown, _msg, _socket) do
     {:error, %{reason: "unknown room"}}
+  end
+
+  def handle_info(:after_join, socket) do
+    user = Guardian.Phoenix.Socket.current_resource(socket)
+    broadcast! socket, "user:entered", %{user: user.username}
+    {:noreply, socket}
   end
 
   def handle_in("ping", msg, socket) do
     {:reply, {:ok, msg}, socket}
   end
 
-  def handle_info({:after_join, msg}, socket) do
-    broadcast! socket, "user:entered", %{user: socket.assigns[:user]}
-    {:noreply, socket}
-  end
-
   def handle_in("new:msg", msg, socket) do
-    user = socket.assigns[:user]
-    broadcast! socket, "new:msg", %{user: user, body: msg["body"]}
-    {:reply, {:ok, %{msg: msg["body"]}}, assign(socket, :user, user)}
+    user = Guardian.Phoenix.Socket.current_resource(socket)
+    broadcast! socket, "new:msg", %{avatar: user.avatar, body: msg["body"], username: user.username}
+    {:reply, {:ok, %{msg: msg["body"]}}, socket}
   end
 
   def terminate(_reason, socket) do
-    broadcast! socket, "user:exited", %{user: socket.assigns[:user]}
+    user = Guardian.Phoenix.Socket.current_resource(socket)
+    broadcast! socket, "user:exited", %{user: user.username}
     :ok
-  end
-
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
   end
 end
