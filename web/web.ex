@@ -37,7 +37,7 @@ defmodule Watercooler.Web do
       import Watercooler.Router.Helpers
       import Watercooler.Gettext
 
-      def current_user(conn), do: conn.cookies["username"]
+      def current_user(conn), do: Guardian.Plug.current_resource(conn)
     end
   end
 
