@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <%= if user = @conn.cookies["username"] do %>
-      <meta name="username" content="<%= user %>">
+    <%= if user = Guardian.Plug.current_resource(@conn) do %>
+      <meta name="guardian_token" content="<%= Guardian.Plug.current_token(@conn) %>">
+      <meta name="uid" content="<%= user.id %>">
+      <meta name="username" content="<%= user.username %>">
     <% end %>
     <title>Watercooler</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
@@ -25,7 +27,7 @@
                 </button>
                 <a class="navbar-brand" href="#">Watercooler</a>
             </div>
-            <%= if @conn.cookies["username"] do %>
+            <%= if Guardian.Plug.current_resource(@conn) do %>
               <div class="nav navbar-nav navbar-right">
                  <a href="/logout" class="navbar-brand">Logout</a>
               </div>
