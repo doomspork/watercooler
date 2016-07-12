@@ -7,7 +7,6 @@ exports.config = {
         before: [
           "web/static/vendor/md5.min.js",
           "web/static/vendor/jquery.min.js",
-          "web/static/vendor/jdenticon-1.3.2.min.js",
           "web/static/vendor/jquery.playSound.js"
         ]
       }
