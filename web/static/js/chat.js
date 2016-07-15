@@ -10,8 +10,8 @@ class Chat {
 
     chan
       .join()
-      .receive("ignore", () => console.log("auth error"))
-      .receive("ok", () => console.log("connected"))
+      .receive("ignore",  () => console.log("auth error"))
+      .receive("ok",      () => console.log("connected"))
       .receive("timeout", () => console.log("Connection interruption"))
 
     chan.onError(e => console.log("something went wrong", e))
@@ -25,10 +25,10 @@ class Chat {
     })
 
     chan.on("new:msg", msg => {
-      let avatar           = msg.avatar
-      let body             = this.checkMentions(current_user, msg.body)
-      let username         = msg.username
-      let message          = this.messageTemplate(avatar, body, username)
+      let avatar   = msg.avatar
+      let body     = this.checkMentions(current_user, msg.body)
+      let username = msg.username
+      let message  = this.messageTemplate(avatar, body, username)
 
       $messages.append(message)
 
